@@ -76,6 +76,7 @@ import {
   SEARCH_CONSOLE_PROPERTY_SCHEMA,
 } from './search-console-property-schema';
 import { WRITE_TOOL_ANNOTATIONS } from './write-tool-annotations';
+import { GA4_TOOL_CATALOG, registerGa4Tools } from './ga4';
 import {
   getToolCatalogForAccessMode,
   getGoogleOAuthScopes,
@@ -956,6 +957,8 @@ class GscMcpRuntime {
   async init() {
     const accessMode = resolveGscAccessMode(this.env.GSC_ACCESS_MODE);
 
+    registerGa4Tools(this.server, () => this.getAccessToken(this.requireGoogleId()));
+
     this.server.registerTool(
       'server.capabilities',
       {
@@ -1004,7 +1007,7 @@ class GscMcpRuntime {
           auth_status_basis: authStatusBasis,
           provider_auth_live_verified: false as const,
           auth_note: authNote,
-          tools: getToolCatalogForAccessMode(TOOL_CATALOG, accessMode),
+          tools: [...getToolCatalogForAccessMode(TOOL_CATALOG, accessMode), ...GA4_TOOL_CATALOG],
           provider_limits: {
             generative_ai_performance_report: {
               dedicated_api_supported: false as const,

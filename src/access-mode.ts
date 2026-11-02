@@ -4,7 +4,12 @@ export type GscAccessMode = (typeof GSC_ACCESS_MODES)[number];
 
 export const DEFAULT_GSC_ACCESS_MODE: GscAccessMode = 'readwrite';
 
-const BASE_OAUTH_SCOPES = ['openid', 'email'] as const;
+const BASE_OAUTH_SCOPES = [
+  'openid',
+  'email',
+  'https://www.googleapis.com/auth/analytics.readonly',
+  'https://www.googleapis.com/auth/analytics.edit',
+] as const;
 
 const READONLY_GOOGLE_OAUTH_SCOPES = [
   ...BASE_OAUTH_SCOPES,
