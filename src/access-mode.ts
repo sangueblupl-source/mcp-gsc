@@ -9,6 +9,7 @@ const BASE_OAUTH_SCOPES = [
   'email',
   'https://www.googleapis.com/auth/analytics.readonly',
   'https://www.googleapis.com/auth/analytics.edit',
+  'https://www.googleapis.com/auth/adwords',
 ] as const;
 
 const READONLY_GOOGLE_OAUTH_SCOPES = [

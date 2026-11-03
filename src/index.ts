@@ -77,6 +77,7 @@ import {
 } from './search-console-property-schema';
 import { WRITE_TOOL_ANNOTATIONS } from './write-tool-annotations';
 import { GA4_TOOL_CATALOG, registerGa4Tools } from './ga4';
+import { ADS_TOOL_CATALOG, registerGoogleAdsTools } from './google-ads';
 import {
   getToolCatalogForAccessMode,
   getGoogleOAuthScopes,
@@ -107,6 +108,9 @@ export interface Env {
   GOOGLE_CLIENT_SECRET: string;
   TOKEN_ENCRYPTION_KEY: string;
   GSC_ACCESS_MODE?: string;
+  GOOGLE_ADS_DEVELOPER_TOKEN?: string;
+  GOOGLE_ADS_LOGIN_CUSTOMER_ID?: string;
+  GOOGLE_ADS_API_VERSION?: string;
 }
 
 export interface AgentProps extends Record<string, unknown> {
@@ -958,6 +962,11 @@ class GscMcpRuntime {
     const accessMode = resolveGscAccessMode(this.env.GSC_ACCESS_MODE);
 
     registerGa4Tools(this.server, () => this.getAccessToken(this.requireGoogleId()));
+    registerGoogleAdsTools(this.server, () => this.getAccessToken(this.requireGoogleId()), {
+      developerToken: this.env.GOOGLE_ADS_DEVELOPER_TOKEN,
+      loginCustomerId: this.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID,
+      apiVersion: this.env.GOOGLE_ADS_API_VERSION,
+    });
 
     this.server.registerTool(
       'server.capabilities',
@@ -1007,7 +1016,7 @@ class GscMcpRuntime {
           auth_status_basis: authStatusBasis,
           provider_auth_live_verified: false as const,
           auth_note: authNote,
-          tools: [...getToolCatalogForAccessMode(TOOL_CATALOG, accessMode), ...GA4_TOOL_CATALOG],
+          tools: [...getToolCatalogForAccessMode(TOOL_CATALOG, accessMode), ...GA4_TOOL_CATALOG, ...ADS_TOOL_CATALOG],
           provider_limits: {
             generative_ai_performance_report: {
               dedicated_api_supported: false as const,
