@@ -58,17 +58,13 @@ export function registerGoogleAdsTools(
   const base = `https://googleads.googleapis.com/${version}`;
 
   async function adsFetch(url: string, init: { method?: string; body?: unknown; loginCustomerId?: string } = {}) {
-    if (!config.developerToken) {
-      throw new Error(
-        'Google Ads is not configured yet: the GOOGLE_ADS_DEVELOPER_TOKEN secret is missing on the server.',
-      );
-    }
     const token = await getToken();
     const headers: Record<string, string> = {
       authorization: `Bearer ${token}`,
-      'developer-token': config.developerToken,
       'content-type': 'application/json',
     };
+    // Access is now tied to the Cloud project; the developer token is optional.
+    if (config.developerToken) headers['developer-token'] = config.developerToken;
     const login = init.loginCustomerId ?? config.loginCustomerId;
     if (login) headers['login-customer-id'] = cid(login);
     const res = await fetch(url, {
