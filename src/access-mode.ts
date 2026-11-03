@@ -10,6 +10,10 @@ const BASE_OAUTH_SCOPES = [
   'https://www.googleapis.com/auth/analytics.readonly',
   'https://www.googleapis.com/auth/analytics.edit',
   'https://www.googleapis.com/auth/adwords',
+  'https://www.googleapis.com/auth/tagmanager.readonly',
+  'https://www.googleapis.com/auth/tagmanager.edit.containers',
+  'https://www.googleapis.com/auth/tagmanager.edit.containerversions',
+  'https://www.googleapis.com/auth/tagmanager.publish',
 ] as const;
 
 const READONLY_GOOGLE_OAUTH_SCOPES = [

@@ -78,6 +78,7 @@ import {
 import { WRITE_TOOL_ANNOTATIONS } from './write-tool-annotations';
 import { GA4_TOOL_CATALOG, registerGa4Tools } from './ga4';
 import { ADS_TOOL_CATALOG, registerGoogleAdsTools } from './google-ads';
+import { GTM_TOOL_CATALOG, registerGtmTools } from './gtm';
 import {
   getToolCatalogForAccessMode,
   getGoogleOAuthScopes,
@@ -961,6 +962,7 @@ class GscMcpRuntime {
   async init() {
     const accessMode = resolveGscAccessMode(this.env.GSC_ACCESS_MODE);
 
+    registerGtmTools(this.server, () => this.getAccessToken(this.requireGoogleId()));
     registerGa4Tools(this.server, () => this.getAccessToken(this.requireGoogleId()));
     registerGoogleAdsTools(this.server, () => this.getAccessToken(this.requireGoogleId()), {
       developerToken: this.env.GOOGLE_ADS_DEVELOPER_TOKEN,
@@ -1016,7 +1018,7 @@ class GscMcpRuntime {
           auth_status_basis: authStatusBasis,
           provider_auth_live_verified: false as const,
           auth_note: authNote,
-          tools: [...getToolCatalogForAccessMode(TOOL_CATALOG, accessMode), ...GA4_TOOL_CATALOG, ...ADS_TOOL_CATALOG],
+          tools: [...getToolCatalogForAccessMode(TOOL_CATALOG, accessMode), ...GA4_TOOL_CATALOG, ...ADS_TOOL_CATALOG, ...GTM_TOOL_CATALOG],
           provider_limits: {
             generative_ai_performance_report: {
               dedicated_api_supported: false as const,
